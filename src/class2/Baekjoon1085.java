@@ -22,6 +22,7 @@ public class Baekjoon1085 {
         for(int num : arr){
             result = Math.min(result,num);
         }
+
         System.out.println(result);
     }
 }
