@@ -17,6 +17,7 @@ public class Baekjoon10989 {
         for(int result : arr){
             bw.write(result+"\n");
         }
+        //
         bw.flush();
         bw.close();
     }
