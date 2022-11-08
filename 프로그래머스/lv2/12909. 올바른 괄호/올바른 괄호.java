@@ -3,19 +3,21 @@ import java.util.*;
 
 class Solution {
     boolean solution(String s) {
-       Queue<Character> queue = new LinkedList<>();
-
-        for (int i = 0; i < s.length(); i++) {
-
-            if (queue.isEmpty()) queue.add(s.charAt(i));
-
-            else if (queue.peek().equals('(') && s.charAt(i) == ')') queue.poll();
-
-            else queue.add(s.charAt(i));
+       int count = 0;
+        
+        if(s.charAt(0) == ')') return false;
+        
+        for(int i =0 ; i < s.length(); i++){
+            if(s.charAt(i) == '(') count++;
+            
+            else count--;
+            
+            if(count < 0) return false;
+            
+            
         }
         
-        if(queue.isEmpty()) return true;
-        
+        if(count == 0) return true;
         return false;
     }
 }
