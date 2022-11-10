@@ -1,5 +1,6 @@
 package Baekjoon.class2;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,10 +17,8 @@ public class Baekjoon1259 {
             * 기존 문자열 == 뒤집은 문자열 -> yes*/
             if(sb.toString().equals("0"))
                 break;
-
-            else if(sb.toString().equals(sb.reverse().toString())) //1321==1231-> false
+            else if(sb.toString().equals(sb.reverse().toString()))
                 System.out.println("yes");
-
             else
                 System.out.println("no");
         }

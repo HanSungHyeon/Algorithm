@@ -18,9 +18,7 @@ public class baekjoon1966 {
             int idx = Integer.parseInt(st.nextToken());
             st = new StringTokenizer(br.readLine()); //중요도 입력
 
-
             Queue<int[]> queue = new LinkedList<>();
-
 
             for (int j = 0; j < pages; j++) {
                 queue.add(new int[] {j,Integer.parseInt(st.nextToken())}); //큐에 {문서 초기위치, 중요도} 추가
