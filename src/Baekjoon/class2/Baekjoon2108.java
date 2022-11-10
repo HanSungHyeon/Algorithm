@@ -9,7 +9,6 @@ import java.util.*;
 public class Baekjoon2108 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int countMax = 0;
         int tc = Integer.parseInt(br.readLine());
         int[] arr = new int[tc];
         ArrayList<Integer> list = new ArrayList<>();
@@ -34,20 +33,17 @@ public class Baekjoon2108 {
             else
                 map.put(arr[i], map.get(arr[i]) + 1); //중복된 값이 있을 경우 value값 증가
         }
-        //제일 높은 value를 가진 key 출력
+        //value중 가장 큰 값
+        Integer maxvalue = Collections.max(map.values());
+
         for (Integer key : map.keySet()) {
-            if (map.get(key) > countMax) {
-                countMax = map.get(key);
-            }
-        }
-        for (Integer key : map.keySet()) {
-            if (map.get(key) == countMax) {
+            if (map.get(key).equals(maxvalue)) {
                 list.add(key);
             }
         }
         Collections.sort(list);
 
-        if (list.size() > 0) System.out.println(list.get(1));
+        if (list.size() > 1) System.out.println(list.get(1));
         else System.out.println(list.get(0));
 
         //범위 = n개의 수들 중 최댓값과 최솟값의 차이
