@@ -1,20 +1,17 @@
 class Solution {
     public String solution(String s) {
         StringBuilder sb = new StringBuilder();
-        char[] arr = s.toCharArray();
+        String[] arr = s.split("");
         int idx = 0;
-        
-        for (char c : arr) {
-            if(c == ' ') {
-                sb.append(c);
+
+        for (String str : arr) {
+            if(str.contains(" ")){
+                sb.append(str);
                 idx = 0;
                 continue;
             }
-            else if(idx % 2 == 0)
-                sb.append(Character.toUpperCase(c));
-            else
-                sb.append(Character.toLowerCase(c));
-            
+            else if(idx % 2 == 0) sb.append(str.toUpperCase());
+            else sb.append(str.toLowerCase());
             idx++;
         }
         return sb.toString();
