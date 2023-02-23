@@ -1,67 +1,64 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	public static int node, line, start;
-	public static boolean[] flag;
-	public static int[][] arr;
-	public static StringBuilder sb = new StringBuilder();
+	static List<Integer>[] list;
+	static boolean[] flag;
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		st = new StringTokenizer(br.readLine());
 
-		node = Integer.parseInt(st.nextToken());
-		line = Integer.parseInt(st.nextToken());
-		start = Integer.parseInt(st.nextToken());
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m = Integer.parseInt(st.nextToken());
+		int v = Integer.parseInt(st.nextToken());
 
-		arr = new int[node + 1][node + 1];
-		flag = new boolean[node + 1];
-
-		// 배열 초기화
-		for (int i = 0; i < line; i++) {
-			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-
-			arr[a][b] = arr[b][a] = 1;
+		list = new ArrayList[n + 1];
+		flag = new boolean[n + 1];
+		for (int i = 1; i <= n; i++) {
+			list[i] = new ArrayList<>();
 		}
-		dfs(start);
-		sb.append("\n");
-		flag = new boolean[node + 1];
-		bfs(start);
-		System.out.println(sb);
 
+		for (int i = 0; i < m; i++) {
+			st = new StringTokenizer(br.readLine());
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+
+			list[from].add(to);
+			list[to].add(from);
+		}
+		for (int i = 1; i <= n; i++)
+			Collections.sort(list[i]);
+		dfs(v);
+		sb.append("\n");
+		flag = new boolean[n + 1];
+		bfs(v);
+		System.out.println(sb);
 	}
 
-	public static void dfs(int start) {
-		flag[start] = true;
-		sb.append(start).append(" ");
+	public static void dfs(int node) {
+		flag[node] = true;
+		sb.append(node + " ");
 
-		for (int i = 1; i <= node; i++) {
-			if (!flag[i] && arr[start][i] == 1)
+		for (int i : list[node]) {
+			if (!flag[i])
 				dfs(i);
 		}
 	}
-
-	public static void bfs(int start) {
-		Queue<Integer> queue = new LinkedList<>();
-		queue.add(start);
-		flag[start] = true;
-
-		while (!queue.isEmpty()) {
-			int temp = queue.poll();
-			sb.append(temp).append(" ");
-
-			for (int i = 1; i <= node; i++) { // 3
-				if (!flag[i] && arr[temp][i] == 1) {
-					queue.add(i);
+	public static void bfs(int node) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(node);
+		flag[node] = true;
+		
+		while(!q.isEmpty()) {
+			int v = q.poll();
+			sb.append(v + " ");
+			
+			for(int i : list[v]) {
+				if(!flag[i]) {
 					flag[i] = true;
+					q.add(i);
 				}
 			}
 		}
