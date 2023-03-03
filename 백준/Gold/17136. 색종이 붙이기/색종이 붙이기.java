@@ -51,13 +51,13 @@ public class Main {
 
 	private static void back(int x, int y,int num) {
 		//(9,9)까지 다 보고 다음 재귀 탔을 때
-		if(x == 9 && y == 10) {
+		if(x == 9 && y > 9) {
 			ans = Math.min(ans,num);
 			return;
 		}
 		
 		//열 밖으로 나가면 다음 행 0열로 이동
-		if(y == 10) { 
+		if(y > 9) { 
 			back(x + 1 ,0, num);
 			return;
 		}
@@ -69,7 +69,7 @@ public class Main {
 				// 색종이 여유분이 있고 붙일 수 있으면
 				if (isCheck(x, y, i) && paper[i] > 0) {
 					in(x,y,i);
-					back(x,y + 1,num + 1);
+					back(x,y + i,num + 1);
 					out(x,y,i);
 				}
 			}
