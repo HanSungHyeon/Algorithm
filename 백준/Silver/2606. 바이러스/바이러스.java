@@ -1,42 +1,53 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static int node, line;
-    public static boolean[] flag;
-    public static int[][] arr;
-    public static int result = 0;
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        node = Integer.parseInt(br.readLine());
-        line = Integer.parseInt(br.readLine());
-
-        arr = new int[node + 1][node + 1];
-        flag = new boolean[node + 1];
-
-        //배열 초기화
-        for (int i = 0; i < line; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-
-            arr[a][b] = arr[b][a] = 1;
-        }
-        System.out.println(dfs(1));
-    }
-
-    public static int dfs(int start) {
-        flag[start] = true;
-
-        for (int i = 1; i <= node; i++) {
-            if (!flag[i] && arr[start][i] == 1) {
-                result++;
-                dfs(i);
-            }
-        }
-        return result;
-    }
+	static List<Integer>[] list;
+	static int node,edge,ans;
+	static boolean[] flag;
+	
+	private static void bfs(int node) {
+		Queue<Integer> q = new LinkedList<>();
+		q.add(node);
+		flag[node] = true;
+		
+		while(!q.isEmpty()) {
+			int com = q.peek();
+			q.poll();
+			
+			for(int i : list[com]) {
+				if(!flag[i]) {
+					ans++;
+					flag[i] = true;
+					q.add(i);
+				}
+			}
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		node = Integer.parseInt(br.readLine());
+		edge = Integer.parseInt(br.readLine());
+		//방문 배열
+		flag = new boolean[node + 1];
+		//인접리스트 사용
+		list = new ArrayList[node + 1];
+		for(int i = 1; i <= node; i++)
+			list[i] = new ArrayList<>();
+		
+		for(int i = 0; i < edge; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+			
+			//from -> to 이동 가능 
+			//to -> from 이동 가능 => 양방향
+			list[from].add(to);
+			list[to].add(from);
+		}
+		bfs(1);
+		System.out.println(ans);
+	}
 }
