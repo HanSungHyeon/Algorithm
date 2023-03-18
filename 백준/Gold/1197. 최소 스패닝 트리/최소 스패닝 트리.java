@@ -2,86 +2,87 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int v, e;
-	static int[] p; 
-	static Edge[] edgeList;
-	static class Edge implements Comparable<Edge>{
-		int from;
-		int to;
-		int line;
-		public Edge(int from , int to, int line) {
+	static class Node implements Comparable<Node> {
+		int from, to, cost;
+
+		public Node(int from, int to, int cost) {
 			this.from = from;
 			this.to = to;
-			this.line = line;
+			this.cost = cost;
 		}
+
 		@Override
-		public int compareTo(Edge o) {
-			return this.line - o.line;
+		public int compareTo(Node node) {
+			return this.cost - node.cost;
 		}
+
 	}
+
+	static int v, e;
+	static List<Node> list = new ArrayList<>();
+	static int[] parents;
+
+	private static boolean union(int a, int b) {
+		a = find(a);
+		b = find(b);
+
+		if (a == b)
+			return false;
+
+		parents[b] = a;
+		return true;
+	}
+
+	private static int find(int a) {
+		if (a == parents[a])
+			return a;
+
+		return parents[a] = find(parents[a]);
+	}
+
+	// 부모
+	private static void makeSet() {
+		for (int i = 1; i <= v; i++)
+			parents[i] = i;
+	}
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
 		v = Integer.parseInt(st.nextToken());
 		e = Integer.parseInt(st.nextToken());
-		
-		p = new int[v];
-		edgeList = new Edge[e];
+		parents = new int[v + 1];
 		for (int i = 0; i < e; i++) {
 			st = new StringTokenizer(br.readLine());
-			int a = Integer.parseInt(st.nextToken()) - 1;
-			int b = Integer.parseInt(st.nextToken()) - 1;
-			int c = Integer.parseInt(st.nextToken());
-			
-			edgeList[i] = new Edge(a,b,c);
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+			int cost = Integer.parseInt(st.nextToken());
+
+			list.add(new Node(from, to, cost));
 		}
-		long ans = getMST();
-		System.out.println(ans);
-	}
-	
-	private static long getMST() {
+		Collections.sort(list);
+
 		makeSet();
-		Arrays.sort(edgeList);
+
+		int ans = 0;
+
+//		for (Node node : list) {
+//			if (find(node.from) != find(node.to)) {
+//				ans += node.cost;
+//				union(node.from, node.to);
+//			}
+//		}
 		
 		int count = 0;
-		long cost = 0;
-		for(Edge edge : edgeList) {
-			int from = edge.from;
-			int to = edge.to;
-			int line = edge.line;
-			
-			boolean result = union(from,to);
-			
-			if(result) {
-				cost += line;
+		for (Node node : list) {
+			if (union(node.from, node.to)) {
+				ans += node.cost;
 				count++;
 			}
-			
 			if(count == v - 1) break;
 		}
-		return cost;
-	}
-	
-	private static void makeSet() {
-		for(int i = 0; i < v; i++) 
-			p[i] = i;
-	}
-	
-	private static int find(int a) {
-		if(a == p[a]) return a;
-		
-		return p[a] = find(p[a]); 
-	}
-	
-	private static boolean union(int a, int b) {
-		int rootA = find(a);
-		int rootB = find(b);
-		
-		if(rootA == rootB) return false;
-		
-		p[rootB] = rootA;
-		return true;
+
+		System.out.println(ans);
 	}
 }
