@@ -7,13 +7,13 @@ public class Main {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int a = Integer.parseInt(st.nextToken());
-        int b = Integer.parseInt(st.nextToken());
+        long a = Integer.parseInt(st.nextToken());
+        long b = Integer.parseInt(st.nextToken());
 
         System.out.println(cal(a, b));
     }
 
-    public static int cal(int a, int b) {
+    public static long cal(long a, long b) {
         return (a + b) * (a - b);
     }
 }
