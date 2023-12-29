@@ -18,9 +18,6 @@ class Solution {
             check(survey[i], choices[i]);
         }
         
-        int idx = 1;
-        char c1 = '1';
-        char c2 = '2';
         String ans = "";
         
         ans = set('R','T',ans);
