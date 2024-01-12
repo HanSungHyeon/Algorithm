@@ -21,7 +21,7 @@ public class Main {
             list[from].add(to);
             list[to].add(from);
         }
-
+        
         Queue<Integer> q = new LinkedList<>();
         q.add(1);
         flag[1] = true;
