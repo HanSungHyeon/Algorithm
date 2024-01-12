@@ -22,8 +22,6 @@ public class Main {
             list[to].add(from);
         }
 
-        for(int i = 1; i <= n; i++) list[i].sort((o1, o2) -> o1 - o2);
-
         Queue<Integer> q = new LinkedList<>();
         q.add(1);
         flag[1] = true;
@@ -38,7 +36,7 @@ public class Main {
                 }
             }
         }
-        Arrays.stream(arr).filter(i -> i != 0).forEach(i -> sb.append(i).append("\n"));
+        for(int i = 2; i <= n; i++) sb.append(arr[i]).append("\n");
         System.out.println(sb);
     }
 }
