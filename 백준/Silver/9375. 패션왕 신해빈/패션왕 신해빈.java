@@ -25,13 +25,15 @@ public class Main {
 				String wear = st.nextToken(); // 버림
 				String type = st.nextToken();
 
-				map.put(type, map.getOrDefault(type, 0) + 1);
+				map.put(type, map.getOrDefault(type, 0) + 1); //옷의 종류 = key 갯수 = value
 			}
 			int result = 1;
+
 			for (Entry<String, Integer> s : map.entrySet()) {
-				result *= solution(s.getValue() + 1, 1);
+				result *= (s.getValue() + 1); //nCk 
 			}
-			sb.append(result - 1 + "\n");
+
+			sb.append(result - 1 + "\n"); //몸에 뭐라도 걸쳐야함 (null,null,null)불가하기 때문에 -1
 		}
 		System.out.println(sb);
 	}
