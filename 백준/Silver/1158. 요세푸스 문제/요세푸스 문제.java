@@ -16,22 +16,12 @@ public class Main {
 
         sb.append("<");
         int count = 1;
-        while(!q.isEmpty()) {
-            if(q.size() == 1) {
-                sb.append(q.poll()).append(">");
-                break;
-            }
+        while(q.size() > 1) {
+            if(count++ % k == 0) sb.append(q.poll()).append(", ");
 
-            else if(count == k){
-                sb.append(q.poll()).append(", ");
-                count = 1;
-            }
-
-            else {
-                q.add(q.poll());
-                count++;
-            }
+            else q.add(q.poll());
         }
+        sb.append(q.poll()).append(">");
         System.out.println(sb);
     }
 
