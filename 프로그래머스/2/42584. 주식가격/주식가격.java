@@ -2,50 +2,40 @@ import java.io.*;
 import java.util.*;
 
 class Solution {
-    public static class Node {
-        int p, t;
-        
-        public Node(int p, int t) {
+    static class Node{
+        int p, idx;
+        public Node(int p, int idx) {
             this.p = p;
-            this.t = t;
+            this.idx = idx;
         }
     }
-    public static Stack<Node> stack = new Stack<>();
     
     public int[] solution(int[] prices) {
         int[] ans = new int[prices.length];
+        int max = prices.length - 1; 
+        Stack<Node> stack = new Stack<>();
+        
         
         for(int i = 0; i < prices.length; i++) {
-            if(stack.isEmpty()){
-                insert(prices[i],i);
-                continue;
-            } 
-            
-            if(stack.peek().p > prices[i]) {
-                down(prices[i], i, ans);
+            if(stack.isEmpty()) {
+                stack.push(new Node(prices[i], i));
             }
-            insert(prices[i], i);
+            
+            else {
+                while(stack.peek().p > prices[i]) {
+                    Node node = stack.pop();
+                    ans[node.idx] = i - node.idx;
+                    
+                    if(stack.isEmpty()) break;
+                }
+                stack.push(new Node(prices[i], i));
+            }
         }
         
-        for(Node n : stack) {
-            ans[n.t] = prices.length - 1 - n.t;
+        while(!stack.isEmpty()) {
+            Node node = stack.pop();
+            ans[node.idx] = max - node.idx;
         }
         return ans;
-    }
-    
-    public static void insert(int p, int t) {
-        stack.push(new Node(p,t));
-    }
-    
-    public static void down(int price, int time, int[] ans) {
-        int size = stack.size();
-        
-        for(int i = 0; i < size; i++) {
-            if(stack.peek().p > price) {
-                Node n = stack.pop();
-                ans[n.t] = time - n.t;
-            }
-            else return;
-        }
     }
 }
