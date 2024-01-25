@@ -1,45 +1,47 @@
 import java.io.*;
 import java.util.*;
-import java.io.IOException;
 
-//1966 프린터 큐
 public class Main {
+    static class Doc {
+        int num, rank;
+        public Doc(int num, int rank){
+            this.num = num;
+            this.rank = rank;
+        }
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine());
-        StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < tc; i++) {
+        int t = Integer.parseInt(br.readLine());
+        while(t-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int n = Integer.parseInt(st.nextToken());
+            int m = Integer.parseInt(st.nextToken());
+
+            PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> o2 - o1);
+            Queue<Doc> q = new LinkedList<>();
+            st = new StringTokenizer(br.readLine(), " ");
+            for(int i = 0; i < n; i++) {
+                int rank = Integer.parseInt(st.nextToken());
+                q.add(new Doc(i, rank));
+                pq.add(rank);
+            }
+
             int count = 0;
-            st = new StringTokenizer(br.readLine());
-            int pages = Integer.parseInt(st.nextToken());
-            int idx = Integer.parseInt(st.nextToken());
-            st = new StringTokenizer(br.readLine()); //중요도 입력
-
-            Queue<int[]> queue = new LinkedList<>();
-
-            for (int j = 0; j < pages; j++) {
-                queue.add(new int[] {j,Integer.parseInt(st.nextToken())}); //큐에 {문서 초기위치, 중요도} 추가
-            }
-
-            while (!queue.isEmpty()){
-                int[] temp = queue.poll();
-                boolean flag = true; //본인이 가장 큰지 판단하기 위함
-
-                for (int[] ints : queue) {
-                    if(temp[1] < ints[1]){ //큐를 순회하면서 temp보다 큰 요소가 있다면 맨 뒤로 다시 삽입 후 순회 종료
-                        queue.add(temp);
-                        flag = false;
-                        break;
-                    }
+            while(!q.isEmpty()) {
+                //큐 맨 앞이 먼저 빠질 수 있다면
+                if(q.peek().rank == pq.peek()) {
+                    Doc doc = q.poll();
+                    pq.poll();
+                    count++;
+                    //내가 찾던 친구면 반복 걍 끝냄
+                    if(doc.num == m) break;
                 }
-                if(!flag) continue;
-
-                count++;
-
-                if(temp[0] == idx) break;
+                else q.add(q.poll());
             }
-            System.out.println(count);
+            sb.append(count).append("\n");
         }
+        System.out.println(sb);
     }
 }
