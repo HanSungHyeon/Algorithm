@@ -2,85 +2,60 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-    public static class Info {
-        int x, y;
-
-        public Info(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    static int[][] delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    static int[][] map;
+    static int[][] arr;
     static boolean[][] flag;
-    static int n;
-
-    public static void main(String[] args) throws IOException {
+    static int max = 0, n;
+    public static void main (String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
-        map = new int[n][n];
+        arr = new int[n][n];
         flag = new boolean[n][n];
 
-        int max = Integer.MIN_VALUE;
-        for (int i = 0; i < n; i++) {
-            map[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            for (int j = 0; j < n; j++) {
-                max = Math.max(max, map[i][j]);
+        for(int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+            for(int j = 0; j < n; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+                max = Math.max(max, arr[i][j]);
             }
         }
+        int ans = 0;
+        while(max-- > 0) {
+            for(int i = 0; i < n; i++) Arrays.fill(flag[i], false);
 
-        int ans = Integer.MIN_VALUE;
-        for (int i = 0; i <= max; i++) {
-            raining(i);
-            ans = Math.max(ans, safeArea());
-            flag = new boolean[n][n];
+            for(int i = 0; i < n; i++) {
+                for(int j = 0; j < n; j++) {
+                    if(arr[i][j] <= max) flag[i][j] = true;
+                }
+            }
+            int count = 0;
+            for(int i = 0 ; i < n; i++) {
+                for(int j = 0; j < n; j++) {
+                    if(!flag[i][j]) {
+                        dfs(i,j);
+                        count++;
+                    }
+                }
+            }
+            ans = Math.max(ans, count);
         }
-
         System.out.println(ans);
     }
 
-    //비 내리기
-    public static void raining(int num) {
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] <= num)
-                    flag[i][j] = true;
-            }
-        }
-    }
+    static void dfs(int x, int y) {
+        if(x < 0 || x >= n || y < 0 || y >= n || flag[x][y]) return;
+        //방문 처리
+        flag[x][y] = true;
 
-    //안전영역 카운트
-    public static int safeArea() {
-        Queue<Info> q = new LinkedList<>();
-        int count = 0;
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (!flag[i][j]) {
-                    q.add(new Info(i, j));
-                    flag[i][j] = true;
+        //상
+        dfs(x - 1, y);
 
-                    while (!q.isEmpty()) {
-                        int x = q.peek().x;
-                        int y = q.peek().y;
-                        q.poll();
+        //하
+        dfs(x + 1, y);
 
-                        for (int k = 0; k < delta.length; k++) {
-                            int r = delta[k][0] + x;
-                            int c = delta[k][1] + y;
+        //좌
+        dfs(x, y - 1);
 
-                            if (r < 0 || r >= n || c < 0 || c >= n || flag[r][c])
-                                continue;
-
-                            q.add(new Info(r, c));
-                            flag[r][c] = true;
-                        }
-                    }
-                    count++;
-                }
-            }
-        }
-        return count;
+        //우
+        dfs(x, y + 1);
     }
 }
