@@ -2,37 +2,39 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static int[] line;
+    static int n;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+        int k = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(st.nextToken());
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
+        line = new int[k];
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i < k; i++) {
+            line[i] = Integer.parseInt(br.readLine());
+            max = Math.max(line[i], max);
+        }
 
-		int n = Integer.parseInt(st.nextToken());
-		long m = Long.parseLong(st.nextToken());
+        System.out.println(binarySearch(1, max));
+    }
 
-		long[] arr = new long[n];
+    public static long binarySearch(long start, long end) {
+        long ans = 0;
+        while(start <= end) {
+            long mid = (start + end) / 2;
 
-		for (int i = 0; i < n; i++)
-			arr[i] = Integer.parseInt(br.readLine());
-		
-		long start = 1;
-		long end = Arrays.stream(arr).max().getAsLong();
+            long count = 0;
+            for(int i : line) count += (i / mid);
 
-		while(start <= end) {
-			long mid = (start + end) / 2;
+            if(count >= n) {
+                ans = Math.max(mid, ans);
+                start = mid + 1;
+            }
 
-			int count = 0;
-			for (long i : arr) {
-				count += (i / mid);
-			}
-
-			if (count < m) {
-				end = mid - 1;
-			}
-			else if(m <= count) {
-				start = mid + 1;
-			}
-		}
-		System.out.println(start - 1);
-	}
+            else end = mid - 1;
+        }
+        return ans;
+    }
 }
