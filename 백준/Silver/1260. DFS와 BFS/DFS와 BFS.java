@@ -2,65 +2,67 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static List<Integer>[] list;
-	static boolean[] flag;
-	static StringBuilder sb = new StringBuilder();
+    static int n, m ,v;
+    static List<Integer>[] list;
+    static boolean[] flag;
+    static StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        v = Integer.parseInt(st.nextToken());
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
-		int v = Integer.parseInt(st.nextToken());
+        list = new ArrayList[n + 1];
+        flag = new boolean[n + 1];
+        for(int i = 1; i <= n; i++) {
+            list[i] = new ArrayList<>();
+        }
 
-		list = new ArrayList[n + 1];
-		flag = new boolean[n + 1];
-		for (int i = 1; i <= n; i++) {
-			list[i] = new ArrayList<>();
-		}
+        for(int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            int from = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
 
-		for (int i = 0; i < m; i++) {
-			st = new StringTokenizer(br.readLine());
-			int from = Integer.parseInt(st.nextToken());
-			int to = Integer.parseInt(st.nextToken());
+            list[from].add(end);
+            list[end].add(from);
+        }
 
-			list[from].add(to);
-			list[to].add(from);
-		}
-		for (int i = 1; i <= n; i++)
-			Collections.sort(list[i]);
-		dfs(v);
-		sb.append("\n");
-		flag = new boolean[n + 1];
-		bfs(v);
-		System.out.println(sb);
-	}
+        for(int i = 1; i <= n; i++) list[i].sort((o1, o2) -> o1 - o2);
 
-	public static void dfs(int node) {
-		flag[node] = true;
-		sb.append(node + " ");
+        dfs(v);
+        sb.append("\n");
+        Arrays.fill(flag, false);
+        bfs(v);
+        System.out.println(sb);
+    }
+    static void bfs(int start) {
+        Queue<Integer> q = new LinkedList<>();
+        q.add(start);
+        flag[start] = true;
 
-		for (int i : list[node]) {
-			if (!flag[i])
-				dfs(i);
-		}
-	}
-	public static void bfs(int node) {
-		Queue<Integer> q = new LinkedList<>();
-		q.add(node);
-		flag[node] = true;
-		
-		while(!q.isEmpty()) {
-			int v = q.poll();
-			sb.append(v + " ");
-			
-			for(int i : list[v]) {
-				if(!flag[i]) {
-					flag[i] = true;
-					q.add(i);
-				}
-			}
-		}
-	}
+        while(!q.isEmpty()) {
+            int cur = q.poll();
+            sb.append(cur).append(" ");
+
+            for(int i : list[cur]) {
+                if(!flag[i]) {
+                    flag[i] = true;
+                    q.add(i);
+                }
+            }
+        }
+    }
+
+    static void dfs(int cur) {
+        if(flag[cur]) return;
+
+        sb.append(cur).append(" ");
+
+        flag[cur] = true;
+        for(int i : list[cur]) {
+            dfs(i);
+        }
+    }
 }
