@@ -2,70 +2,63 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static class Node{
-		int x;
-		int y;
-		public Node(int x,int y) {
+	static class Node {
+		int x, y;
+
+		public Node(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 	}
-	static Queue<Node> q = new LinkedList<>();
-	static int[][] arr;
-	static int[][] delta = {{-1,0},{1,0},{0,-1},{0,1}};
+
+	static int n, m, k;
+	static int[][] arr, delta = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 	static boolean[][] flag;
-	static int m,n;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int tc = Integer.parseInt(br.readLine());
-		
-		while(tc-- > 0) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			 m = Integer.parseInt(st.nextToken());
+		StringBuilder sb = new StringBuilder();
+		int t = Integer.parseInt(br.readLine());
+
+		while (t-- > 0) {
+			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 			n = Integer.parseInt(st.nextToken());
-			int cabbage = Integer.parseInt(st.nextToken());
-			int result = 0;
+			m = Integer.parseInt(st.nextToken());
+			k = Integer.parseInt(st.nextToken());
+
 			arr = new int[n][m];
 			flag = new boolean[n][m];
-			for(int i = 0 ;i < cabbage; i++) {
-				st = new StringTokenizer(br.readLine());
-				int y = Integer.parseInt(st.nextToken());
+			for (int i = 0; i < k; i++) {
+				st = new StringTokenizer(br.readLine(), " ");
 				int x = Integer.parseInt(st.nextToken());
-				
+				int y = Integer.parseInt(st.nextToken());
 				arr[x][y] = 1;
 			}
-			for(int i = 0; i< n; i++) {
-				for(int j = 0; j <m; j++) {
-					if(!flag[i][j] && arr[i][j] == 1) {
-						bfs(i,j);
-						result++;
+			int count = 0;
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < m; j++) {
+					if (!flag[i][j] && arr[i][j] == 1) {
+						dfs(i, j);
+						count++;
 					}
 				}
 			}
-			System.out.println(result);
+			sb.append(count).append("\n");
 		}
+		System.out.println(sb);
 	}
-	public static void bfs(int x, int y) {
-		q.add(new Node(x, y));
+
+	static void dfs(int x, int y) {
+
 		flag[x][y] = true;
-		
-		while(!q.isEmpty()) {
-			int x1 = q.peek().x;
-			int y1 = q.peek().y;
-			q.poll();
-			
-			for(int i = 0 ;i < delta.length; i++) {
-				int dx = x1 + delta[i][0];
-				int dy = y1 + delta[i][1];
-				
-				if(dx < 0 || dy < 0 || dx >= n || dy >= m) continue;
-				
-				if(!flag[dx][dy] && arr[dx][dy] == 1) {
-					flag[dx][dy] = true;
-					q.add(new Node(dx,dy));
-				}
-			}
+
+		for (int i = 0; i < delta.length; i++) {
+			int dx = delta[i][0] + x;
+			int dy = delta[i][1] + y;
+
+			if (dx < 0 || dx >= n || dy < 0 || dy >= m || flag[dx][dy] || arr[dx][dy] != 1) continue;
+
+			dfs(dx, dy);
 		}
 	}
 }
