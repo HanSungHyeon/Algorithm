@@ -1,8 +1,9 @@
-//크다 합쳤을 때 베이스의 레벨은 계속 해서 유지 됨
-//두 카드의 레벨 합만큼 골드를 얻을 수 잇음
-//골드를 가장 많이 얻고 싶음
-//카드 뭉치 중에 가장 큰 놈이 누군지 먼저 찾아야함 -> 레벨은 변하지 않기 때문
-//제일 큰 친구 양 옆을 계속해서 제거해 나감
+/*
+업그레이드가 된 카드의 레벨은 변하지 않음 -> 베이스의 레벨 유지
+서로 인접한 카드만 합성 가능
+합성 할 때 두 카드의 레벨 합 만큼 골드 획득 ex) A B 합성 -> A + B 골드 획득
+가장 큰 수를 베이스로 두고 주변 친구들을 합성 재료로 사용
+ */
 
 import java.io.*;
 import java.util.*;
@@ -13,23 +14,21 @@ public class Main {
 		int n = Integer.parseInt(br.readLine());
 		int[] arr = new int[n];
 		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		int max = Integer.MIN_VALUE;
 		int idx = 0;
+		int max = 0;
 		for (int i = 0; i < n; i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
-			if (max < arr[i]) {
+			if (max <= arr[i]) {
 				max = arr[i];
 				idx = i;
 			}
 		}
-		int sum = 0;
-		for (int i = idx + 1; i < n; i++) {
-			sum += (arr[idx] + arr[i]);
-		}
 
-		for (int i = idx - 1; i >= 0; i--) {
-			sum += (arr[idx] + arr[i]);
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			if (i == idx) continue;
+			ans += (arr[idx] + arr[i]);
 		}
-		System.out.println(sum);
+		System.out.println(ans);
 	}
 }
