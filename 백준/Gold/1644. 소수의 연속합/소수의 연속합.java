@@ -23,14 +23,18 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		makePrime();
+		if (n == 1 || n == 0) {
+			System.out.println(0);
+		} else {
+			makePrime();
 
-		for (int i = 2; i <= 4000000; i++) {
-			if (prime[i]) list.add(i);
+			for (int i = 2; i <= n; i++) {
+				if (prime[i]) list.add(i);
+			}
+
+			int ans = twoPointer();
+			System.out.println(ans);
 		}
-
-		int ans = twoPointer();
-		System.out.println(ans);
 	}
 
 	static int twoPointer() {
@@ -38,7 +42,7 @@ public class Main {
 		int end = 0;
 		int sum = list.get(start);
 		int count = 0;
-		while (start < list.size() && start <= end) {
+		while (start < list.size()) {
 			if (sum < n) {
 				end++;
 				if (end >= list.size()) break;
@@ -46,23 +50,22 @@ public class Main {
 			} else if (sum == n) {
 				sum -= list.get(start++);
 				count++;
-			} else {
+			} else if (sum > n) {
 				sum -= list.get(start++);
-
 			}
 		}
 		return count;
 	}
 
 	static void makePrime() {
-		prime = new boolean[4000000 + 1];
+		prime = new boolean[n + 1];
 		Arrays.fill(prime, true);
 		prime[0] = false;
 		prime[1] = false;
 
-		for (int i = 2; i <= Math.sqrt(4000000); i++) {
+		for (int i = 2; i <= Math.sqrt(n); i++) {
 			if (prime[i]) {
-				for (int j = i * i; j <= 4000000; j += i) {
+				for (int j = i * i; j <= n; j += i) {
 					prime[j] = false;
 				}
 			}
