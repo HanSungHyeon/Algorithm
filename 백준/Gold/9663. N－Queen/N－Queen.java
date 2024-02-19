@@ -1,67 +1,69 @@
+//퀸을 N개 놓아야 함
 import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int n, count = 0;
-	static int[][] arr;
-	static int[][] delta = { { 1, -1 }, { 1, 0 }, { 1, 1 } };
-
+	static int n, ans = 0;
+	static int[][] arr, delta = {{1,0},{1,1},{1,-1}};
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
 		arr = new int[n][n];
-		back(0);
-		System.out.println(count);
-	}
-	private static void print() {
-		for(int i =0 ;i < n; i++) {
-			System.out.println(Arrays.toString(arr[i]));
-		}
-		System.out.println("-----------------------------");
+		dfs(0);
+		System.out.println(ans);
 	}
 
-	private static void back(int row) {
+	static void dfs(int row) {
 		if(row == n) {
-			count++;
-//			print();
+			ans++;
 			return;
 		}
-		
-		for (int i = 0; i < n; i++) {
-			// 퀸 놓을 수 있음
-			if (arr[row][i] == 0) {
-				arr[row][i]++;
-				// 공격로 표시
-				for (int d = 0; d < 3; d++) {
-					int dx = row;
-					int dy = i;
-					while (true) {
-						dx += delta[d][0];
-						dy += delta[d][1];
 
-						if (dx < 0 || dy < 0 || dx >= n || dy >= n)
-							break;
+		for(int i = 0; i < n; i++) {
+			//퀸 놓을 수 있음
+			if(arr[row][i] == 0) {
+				//공격로 표시
+				addAttack(row, i);
+				//다음 말 놓으러 감
+				dfs(row + 1);
+				//공격로 제거
+				removeAttack(row,i);
+			}
+		}
 
-						arr[dx][dy]++;
-					}
-				}
-				back(row + 1);
-				// 공격로 제거
-				arr[row][i]--;
-				for (int d = 0; d < 3; d++) {
-					int nx = row;
-					int ny = i;
-					while (true) {
-						nx += delta[d][0];
-						ny += delta[d][1];
+	}
+	static void removeAttack(int row, int col) {
+		arr[row][col]--;
+		for(int i = 0; i < delta.length; i++) {
+			int dx = row + delta[i][0];
+			int dy = col + delta[i][1];
 
-						if (nx < 0 || ny < 0 || nx >= n || ny >= n)
-							break;
-
-						arr[nx][ny]--;
-					}
-				}
+			while(isCheck(dx, dy)) {
+				arr[dx][dy]--;
+				dx += delta[i][0];
+				dy += delta[i][1];
 			}
 		}
 	}
+
+	static void addAttack(int row, int col) {
+		arr[row][col]++;
+		//공격 방향 고르고
+		for(int i = 0; i < delta.length; i++) {
+			int dx = row + delta[i][0];
+			int dy = col + delta[i][1];
+
+			//해당 방향으로 공격로 쭈욱 그음
+			while(isCheck(dx,dy)) {
+				arr[dx][dy]++;
+				dx += delta[i][0];
+				dy += delta[i][1];
+			}
+		}
+	}
+	static boolean isCheck(int dx, int dy) {
+		return dx >= 0 && dx < n && dy >= 0 && dy < n;
+	}
+
+
 }
