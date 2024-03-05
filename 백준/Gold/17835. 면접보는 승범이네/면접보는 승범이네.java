@@ -3,13 +3,9 @@
 문제 입력 역방향으로 세팅
 단방향
 애초에 반대로 입력 받아오고
-면접장 수만큼 돌려버림
-도시 <= 100,000
-도로 개수 <= 500,000
-도로 길이 <= 100,000
-면접장 <= 도시
-도로 개수가 50만이고 전부 길이는 10만이라면
-83%?????????????????
+
+넘 느린뎅
+
  */
 import java.io.*;
 import java.util.*;
@@ -27,6 +23,7 @@ public class Main {
 	static long INF = Long.MAX_VALUE;
 	static long[] dist;
 	static List<Node>[] list;
+	static PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> Long.compare(o1.edge, o2.edge));
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine()," ");
@@ -52,16 +49,16 @@ public class Main {
 		st = new StringTokenizer(br.readLine());
 		while(st.hasMoreTokens()) {
 			int start = Integer.parseInt(st.nextToken());
-			dijkstra(start);
+			pq.add(new Node(start, 0));
+			dist[start] = 0;
 		}
+		//한번만돌려보쟈
+		dijkstra();
 
 		//면접장까지 거리가 가장 먼 도시
 		//여러 개면은 가장 작은 번호
 		StringBuilder sb = new StringBuilder();
-		long max = 0;
-		for(int i = 1; i <= n; i++) {
-			if(dist[i] > max) max = dist[i];
-		}
+		long max = Arrays.stream(dist).max().getAsLong();
 		for(int i = 1; i <= n; i++) {
 			if(dist[i] == max) {
 				sb.append(i).append("\n");
@@ -71,11 +68,7 @@ public class Main {
 		sb.append(max);
 		System.out.println(sb);
 	}
-	static void dijkstra(int start) {
-		PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> Long.compare(o1.edge, o2.edge));
-		pq.add(new Node(start, 0));
-		dist[start] = 0;
-
+	static void dijkstra() {
 		while(!pq.isEmpty()) {
 			int cur = pq.peek().node;
 			long edge = pq.peek().edge;
