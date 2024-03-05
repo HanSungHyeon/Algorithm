@@ -58,7 +58,10 @@ public class Main {
 		//면접장까지 거리가 가장 먼 도시
 		//여러 개면은 가장 작은 번호
 		StringBuilder sb = new StringBuilder();
-		long max = Arrays.stream(dist).max().getAsLong();
+		long max = 0;
+		for(int i = 1; i <= n; i++) {
+			if(dist[i] > max) max = dist[i];
+		}
 		for(int i = 1; i <= n; i++) {
 			if(dist[i] == max) {
 				sb.append(i).append("\n");
