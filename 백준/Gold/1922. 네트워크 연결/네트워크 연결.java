@@ -34,10 +34,13 @@ public class Main {
 		list.sort((o1, o2) -> o1.edge - o2.edge);
 
 		int sum = 0;
+		int count = 0;
 		for(Node node : list) {
 			if(union(node.from, node.to)) {
 				sum += node.edge;
+				count++;
 			}
+			if(count == n - 1) break;
 		}
 		System.out.println(sum);
 	}
