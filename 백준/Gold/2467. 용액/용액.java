@@ -7,14 +7,13 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static long min = Long.MAX_VALUE, l, r;
-	static int n;
-	static long[] arr;
+	static int min = Integer.MAX_VALUE, l, r, n;
+	static int[] arr;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		n = Integer.parseInt(br.readLine());
-		arr = Arrays.stream(br.readLine().split(" ")).mapToLong(Long::parseLong).toArray();
+		arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
 		binarySearch();
 		System.out.println(l + " " + r);
@@ -25,7 +24,7 @@ public class Main {
 		int end = arr.length - 1;
 
 		while(start < end) {
-			long sum = arr[start] + arr[end];
+			int sum = arr[start] + arr[end];
 
 			 if(Math.abs(min) > Math.abs(sum)) {
 				 min = sum;
