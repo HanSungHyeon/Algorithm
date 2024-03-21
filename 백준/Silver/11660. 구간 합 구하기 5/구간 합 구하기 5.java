@@ -2,43 +2,49 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int[][] d;
-	static int n, x1, y1, x2, y2;
-
+	static int n, m;
+	static int[][] arr, dp;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
+		StringTokenizer st = new StringTokenizer(br.readLine()," ");
 		n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		arr = new int[n + 1][n + 1];
+		dp = new int[n + 1][n + 1];
 
-		d = new int[n + 1][n + 1];
-		
-		// 숫자 입력
-		for (int i = 1; i <= n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 1; j <= n; j++) {
-				int temp = Integer.parseInt(st.nextToken());
-				d[i][j] = d[i - 1][j] + d[i][j - 1] - d[i - 1][j - 1] + temp;
+		for(int i = 1; i <= n; i++) {
+			st = new StringTokenizer(br.readLine()," ");
+			for(int j = 1; j <= n; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
-		for (int i = 0; i < m; i++) {
-			st = new StringTokenizer(br.readLine());
-			x1 = Integer.parseInt(st.nextToken());
-			y1 = Integer.parseInt(st.nextToken());
-			x2 = Integer.parseInt(st.nextToken());
-			y2 = Integer.parseInt(st.nextToken());
+		dp[0][0] = arr[0][0];
+		for(int i = 1; i <= n; i++) {
+			dp[1][i] = dp[1][i - 1] + arr[1][i];
+			dp[i][1] = dp[i - 1][1] + arr[i][1];
+		}
+		sum(n,n);
 
-			sb.append(get() + "\n");
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < m; i++) {
+			st = new StringTokenizer(br.readLine()," ");
+			int x1 = Integer.parseInt(st.nextToken());
+			int y1 = Integer.parseInt(st.nextToken());
+			int x2 = Integer.parseInt(st.nextToken());
+			int y2 = Integer.parseInt(st.nextToken());
+
+			sb.append(dp[x2][y2] - dp[x1 - 1][y2] - dp[x2][y1 - 1] + dp[x1 - 1][y1 - 1]).append("\n");
 		}
 		System.out.println(sb);
-
-//		for (int i = 0; i < d.length; i++)
-//			System.out.println(Arrays.toString(d[i]));
 	}
+	
+	//누적합 구하기
+	static int sum(int x, int y) {
+		if(x == 0 && y == 0) return dp[x][y];
 
-	public static int get() {
-		return d[x2][y2] - d[x1 - 1][y2] - d[x2][y1 - 1]+d[x1 - 1][y1 - 1];
+		if(dp[x][y] > 0) return dp[x][y];
+
+		return dp[x][y] = sum(x - 1, y) + sum(x, y - 1) + arr[x][y] - sum(x - 1, y - 1);
 	}
 }
