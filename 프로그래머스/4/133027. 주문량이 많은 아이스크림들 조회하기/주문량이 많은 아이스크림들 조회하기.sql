@@ -10,7 +10,3 @@ group by
 order by
     sum(fh.total_order) desc
 limit 3;
-
-    
-
-
