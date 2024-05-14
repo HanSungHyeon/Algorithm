@@ -51,7 +51,7 @@ public class Main {
 	}
 
 	static String bfs(int a, int b) {
-		q = new LinkedList<>();
+		q = new ArrayDeque<>();
 		q.add(new Node(a, ""));
 		flag[a] = true;
 		String ans = "";
