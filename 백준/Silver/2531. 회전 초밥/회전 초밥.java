@@ -1,35 +1,61 @@
+/*
+* K개를 연속해서 먹을 경우 할인된 가격 제공
+*
+* */
+
 import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N, d, k, c;
-    static int[] sushi;
-    public static void main(String[] args) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        d = Integer.parseInt(st.nextToken());
-        k = Integer.parseInt(st.nextToken());
-        c = Integer.parseInt(st.nextToken())-1;
-        sushi = new int[N];
-        int[] eat = new int[d];	// 해당 종류의 초밥을 몇개 먹었는지 저장하는 배열
-        for(int i =0 ; i < N ; i++){
-            sushi[i] = Integer.parseInt(br.readLine())-1;
-        }
-        int res = 0;
-        int cnt = 0;
-        for(int i =0 ; i < k ; i++){
-            if(eat[sushi[i]]++ == 0) cnt++;
-        }
-        for(int i =0 ; i < N ; i++){
-            if(res <= cnt){     // MAX 값 새로 갱신
-                if(eat[c] == 0) res = cnt+1;
-                else res = cnt;
-            }
-            int j = (i+k)%N;  // end 값 (순환 → 인덱스 초과할 때의 처리)
-            if(eat[sushi[j]] ++ == 0) cnt++;
-            if(-- eat[sushi[i]] == 0) cnt--;
-        }
-        System.out.println(res);
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine()," ");
+
+		int n = Integer.parseInt(st.nextToken());
+		int d = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
+		int c = Integer.parseInt(st.nextToken());
+
+		int[] arr = new int[n];
+		int[] sushi = new int[d + 1];
+
+		for(int i = 0; i < n; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+
+		//현재 먹은 종류
+		int cur = 0;
+		for(int i = 0; i < k; i++) {
+			if(sushi[arr[i]] == 0) cur++;
+
+			sushi[arr[i]]++;
+		}
+
+		int max = cur;
+		//(i + k - 1) % n
+		for(int i = 0; i < n; i++) {
+			if(max <= cur) {
+				//쿠폰 아직 안 먹음
+				if(sushi[c] == 0) max = cur + 1;
+
+				else max = cur;
+			}
+
+			//시선 옮기기 먹기
+			int idx = (i + k) % n;
+			if(sushi[arr[idx]] == 0) {
+				//새 거 안먹었으면?
+				cur++;
+			}
+			sushi[arr[idx]]++;
+
+			//현재 자리 안먹은거 취급
+			sushi[arr[i]]--;
+			if(sushi[arr[i]] == 0) {
+				//지금 종류 안먹음
+				cur--;
+			}
+		}
+		System.out.println(max);
+	}
 }
