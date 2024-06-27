@@ -1,61 +1,59 @@
-/*
-* K개를 연속해서 먹을 경우 할인된 가격 제공
-*
-* */
-
 import java.io.*;
 import java.util.*;
 
 public class Main {
+	static int n, d, k, c, count, ans;
+	static int[] arr, flag;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine()," ");
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
-		int n = Integer.parseInt(st.nextToken());
-		int d = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
-		int c = Integer.parseInt(st.nextToken());
+		n = Integer.parseInt(st.nextToken());
+		d = Integer.parseInt(st.nextToken());
+		k = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
 
-		int[] arr = new int[n];
-		int[] sushi = new int[d + 1];
+		arr = new int[n];
+		flag = new int[d + 1];
 
-		for(int i = 0; i < n; i++) {
+		for (int i = 0; i < n; i++) {
 			arr[i] = Integer.parseInt(br.readLine());
 		}
 
-		//현재 먹은 종류
-		int cur = 0;
-		for(int i = 0; i < k; i++) {
-			if(sushi[arr[i]] == 0) cur++;
+		count = 0;
+		for (int i = 0; i < k; i++) {
+			if (flag[arr[i]] == 0) count++;
 
-			sushi[arr[i]]++;
+			flag[arr[i]]++;
 		}
 
-		int max = cur;
-		//(i + k - 1) % n
-		for(int i = 0; i < n; i++) {
-			if(max <= cur) {
-				//쿠폰 아직 안 먹음
-				if(sushi[c] == 0) max = cur + 1;
+		ans = count;
+		if (flag[c] == 0) ans++;
 
-				else max = cur;
-			}
+		slide();
+		System.out.println(ans);
+	}
 
-			//시선 옮기기 먹기
-			int idx = (i + k) % n;
-			if(sushi[arr[idx]] == 0) {
-				//새 거 안먹었으면?
-				cur++;
-			}
-			sushi[arr[idx]]++;
+	//(i + k - 1) % n;
+	static void slide() {
+		for (int i = 1; i < n; i++) {
+			int idx = (i + k - 1) % n;
 
-			//현재 자리 안먹은거 취급
-			sushi[arr[i]]--;
-			if(sushi[arr[i]] == 0) {
-				//지금 종류 안먹음
-				cur--;
-			}
+			if (flag[arr[idx]] == 0) count++;
+			flag[arr[idx]]++;
+
+			flag[arr[i - 1]]--;
+			if (flag[arr[i - 1]] == 0) count--;
+
+			findMax();
 		}
-		System.out.println(max);
+	}
+
+	static void findMax() {
+		if (ans <= count) {
+			if (flag[c] == 0) ans++;
+			else ans = count;
+		}
 	}
 }
