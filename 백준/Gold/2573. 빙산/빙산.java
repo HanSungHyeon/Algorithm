@@ -1,5 +1,6 @@
 /*
 * 3 <= n , m <= 300
+* 이제보니 무조건 한 덩어리 주어지는 듯
 * */
 
 import java.io.*;
@@ -25,19 +26,10 @@ public class Main {
 		arr = new int[n][m];
 		copy = new int[n][m];
 
-		for(int i = 0 ; i < n; i++) {
-			arr[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-		}
-
-		flag = new boolean[n][m];
-		//초기 빙산 갯수 구하기
-		int init = 0;
 		for(int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine(), " ");
 			for(int j = 0; j < m; j++) {
-				if(!flag[i][j] && arr[i][j] != 0) {
-					counting(i, j);
-					init++;
-				}
+				arr[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
@@ -47,27 +39,31 @@ public class Main {
 			copy();
 			//1년 흐름
 			bfs();
-			//빙산 갯수 다시 세기
-			flag = new boolean[n][m];
-			int count = 0;
-			for(int i = 0; i < n; i++) {
-				for(int j = 0; j < m; j++) {
-					if(!flag[i][j] && arr[i][j] != 0) {
-						counting(i, j);
-						count++;
-					}
-				}
-			}
-            
+			//덩어리 세기
+			int count = count();
+			
 			if(count == 0) {
 				year = 0;
 				break;
 			}
-			else if(count > init) {
+			else if(count > 1) {
 				break;
 			}
 		}
 		System.out.println(year);
+	}
+	static int count() {
+		flag = new boolean[n][m];
+		int count = 0;
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < m; j++) {
+				if(!flag[i][j] && arr[i][j] != 0) {
+					visit(i,j);
+					count++;
+				}
+			}
+		}
+		return count;
 	}
 
 	static void bfs() {
@@ -99,7 +95,7 @@ public class Main {
 		}
 	}
 
-	static void counting(int sx, int sy) {
+	static void visit(int sx, int sy) {
 		Queue<Node> q = new LinkedList<>();
 		q.add(new Node(sx, sy));
 		flag[sx][sy] = true;
