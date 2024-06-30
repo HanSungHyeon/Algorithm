@@ -37,17 +37,20 @@ public class Main {
 			}
 		}
 
+		//출석 안한 사람 전부 더함
+		int[] noCheck = new int[n + 3];
+		for(int i = 3; i< noCheck.length; i++) {
+			noCheck[i] = noCheck[i - 1];
+			if(arr[i] == 0) noCheck[i]++;
+		}
+
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine()," ");
 			int s = Integer.parseInt(st.nextToken());
 			int e = Integer.parseInt(st.nextToken());
 
-			int count = 0;
-			for(int j = s; j <= e; j++) {
-				if(arr[j] == 0) count++;
-			}
-			sb.append(count).append("\n");
+			sb.append(noCheck[e] - noCheck[s - 1]).append("\n");
 		}
 		System.out.println(sb);
 	}
